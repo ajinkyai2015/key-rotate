@@ -74,3 +74,9 @@ variable "AWS_SECRET_ACCESS_KEY" {
   description = "The AWS secret access key for authentication"
   type        = string
 }
+
+variable "test_user_name" {
+  description = "The name of the test user"
+  type        = string
+}
+
