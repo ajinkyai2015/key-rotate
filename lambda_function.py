@@ -68,13 +68,14 @@ def lambda_handler(event, context):
             print(f"Failed to list access key for user {user_name}: {e}")
             continue
 
+        if len(access_keys) >= 2:
+            # If there are already 2 access keys, delete the oldest one
+            oldest_key = min(access_keys, key=lambda k: k['CreateDate'])
+            delete_key(iam, user_name, oldest_key['AccessKeyId'])
+
         for access_key in access_keys:
             key_id = access_key['AccessKeyId']
             status = access_key['Status']
-            #create_date = access_key['CreateDate']
-            #age = (datetime.now(timezone.utc) - create_date).days
-            #last_used_response = iam.get_access_key_last_used(AccessKeyId=key_id)
-            #last_used = last_used_response['AccessKeyLastUsed'].get('LastUsedDate', datetime.now(timezone.utc))
 
             try:
                 # Create new key
