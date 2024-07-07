@@ -97,7 +97,7 @@ resource "aws_secretsmanager_secret_version" "readonly_user_secret_version" {
     SecretAccessKey = aws_iam_access_key.readonly_user_key.secret
   })
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
