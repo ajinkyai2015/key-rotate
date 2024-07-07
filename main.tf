@@ -1,6 +1,16 @@
-provider "aws" {
-  region = var.region
+terraform {
+  required_providers {
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 2.2.0"
+    }
+  }
 }
+
+provider "aws" {
+  region = "us-west-2"
+}
+
 terraform {
   backend "s3" {
     bucket         = "kr-statefile"
@@ -31,8 +41,21 @@ module "lambda" {
 }
 
 module "eventbridge" {
-  source              = "./modules/eventbridge"
-  lambda_function_arn = module.lambda.lambda_function_arn
+  source                 = "./modules/eventbridge"
+  lambda_function_arn    = module.lambda.lambda_function_arn
+  sns_topic_arn          = module.sns.sns_topic_arn
+  env1_create_key        = var.env1_create_key
+  env2_disable_key       = var.env2_disable_key
+  env3_delete_key        = var.env3_delete_key
+  last_used_threshold    = var.last_used_threshold
+}
+
+module "ec2" {
+  source          = "./modules/ec2"
+  ami             = var.ami
+  instance_type   = var.instance_type
+  key_name        = var.key_name
+  instance_name   = var.instance_name
 }
 
 module "ec2" {

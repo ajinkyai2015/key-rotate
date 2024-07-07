@@ -31,7 +31,11 @@ variable "last_used_threshold" {
 variable "ami" {
   description = "The AMI ID to use for the instance"
   type        = string
+<<<<<<< HEAD
   default     = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI ID for us-west-2
+=======
+  default     = "ami-0604d81f2fd264c7b"  # Amazon Linux 2 AMI ID for us-west-2
+>>>>>>> main
 }
 
 variable "instance_type" {
@@ -49,3 +53,21 @@ variable "instance_name" {
   description = "The name tag for the instance"
   type        = string
 }
+<<<<<<< HEAD
+=======
+
+variable "readonly_role_name" {
+  description = "The name of the read-only role"
+  type        = string
+}
+
+variable "readonly_user_name" {
+  description = "The name of the read-only user"
+  type        = string
+}
+
+variable "secrets_manager_secret_name" {
+  description = "The name of the Secrets Manager secret"
+  type        = string
+}
+>>>>>>> main
