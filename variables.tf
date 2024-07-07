@@ -31,7 +31,7 @@ variable "last_used_threshold" {
 variable "ami" {
   description = "The AMI ID to use for the instance"
   type        = string
-  default     = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI ID for us-west-2
+  default     = "ami-0604d81f2fd264c7b"  # Amazon Linux 2 AMI ID for us-west-2
 }
 
 variable "instance_type" {
