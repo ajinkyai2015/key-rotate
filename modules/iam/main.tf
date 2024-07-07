@@ -65,8 +65,14 @@ resource "aws_iam_user" "readonly_user" {
 resource "aws_iam_access_key" "readonly_user_key" {
   user = aws_iam_user.readonly_user.name
 
-  lifecycle {
-    prevent_destroy = true
+  provisioner "local-exec" {
+    command = <<EOT
+    aws iam list-access-keys --user-name ${aws_iam_user.readonly_user.name} --query 'AccessKeyMetadata[*].AccessKeyId' --output text | xargs -n1 -I {} aws iam delete-access-key --user-name ${aws_iam_user.readonly_user.name} --access-key-id {}
+    EOT
+    environment = {
+      AWS_ACCESS_KEY_ID     = var.AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY = var.AWS_SECRET_ACCESS_KEY
+    }
   }
 }
 
@@ -77,8 +83,14 @@ resource "aws_iam_user" "test_user" {
 resource "aws_iam_access_key" "test_user_key" {
   user = aws_iam_user.test_user.name
 
-  lifecycle {
-    prevent_destroy = true
+  provisioner "local-exec" {
+    command = <<EOT
+    aws iam list-access-keys --user-name ${aws_iam_user.test_user.name} --query 'AccessKeyMetadata[*].AccessKeyId' --output text | xargs -n1 -I {} aws iam delete-access-key --user-name ${aws_iam_user.test_user.name} --access-key-id {}
+    EOT
+    environment = {
+      AWS_ACCESS_KEY_ID     = var.AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY = var.AWS_SECRET_ACCESS_KEY
+    }
   }
 }
 
