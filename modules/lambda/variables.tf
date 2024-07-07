@@ -34,7 +34,7 @@ variable "last_used_threshold" {
   type        = string
 }
 
-variable "lambda_role_arn" {
-  description = "ARN of the IAM role to be used by Lambda function"
-  type        = string
-}
+# variable "lambda_role_arn" {
+#   description = "ARN of the IAM role to be used by Lambda function"
+#   type        = string
+# }
