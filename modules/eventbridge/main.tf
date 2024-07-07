@@ -1,5 +1,5 @@
-resource "random_id" "lambda_permission_id" {
-  byte_length = 8
+resource "random_string" "lambda_permission_id" {
+  length  = 8
   special = false
   upper   = false
 }
