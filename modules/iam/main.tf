@@ -66,13 +66,14 @@ resource "aws_iam_access_key" "readonly_user_key" {
   user = aws_iam_user.readonly_user.name
 
   provisioner "local-exec" {
-    command = <<EOT
-    aws iam list-access-keys --user-name ${aws_iam_user.readonly_user.name} --query 'AccessKeyMetadata[*].AccessKeyId' --output text | xargs -n1 -I {} aws iam delete-access-key --user-name ${aws_iam_user.readonly_user.name} --access-key-id {}
-    EOT
-    environment = {
-      AWS_ACCESS_KEY_ID     = var.AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY = var.AWS_SECRET_ACCESS_KEY
-    }
+    command = <<EOF
+    #!/bin/bash
+    existing_keys=$(aws iam list-access-keys --user-name ${var.readonly_user_name} --query 'AccessKeyMetadata[*].AccessKeyId' --output text)
+    for key in $existing_keys; do
+      aws iam delete-access-key --user-name ${var.readonly_user_name} --access-key-id $key
+    done
+    EOF
+    interpreter = ["bash", "-c"]
   }
 }
 
@@ -80,17 +81,22 @@ resource "aws_iam_user" "test_user" {
   name = "test-user"
 }
 
+resource "aws_iam_user" "test_user" {
+  name = var.test_user_name
+}
+
 resource "aws_iam_access_key" "test_user_key" {
   user = aws_iam_user.test_user.name
 
   provisioner "local-exec" {
-    command = <<EOT
-    aws iam list-access-keys --user-name ${aws_iam_user.test_user.name} --query 'AccessKeyMetadata[*].AccessKeyId' --output text | xargs -n1 -I {} aws iam delete-access-key --user-name ${aws_iam_user.test_user.name} --access-key-id {}
-    EOT
-    environment = {
-      AWS_ACCESS_KEY_ID     = var.AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY = var.AWS_SECRET_ACCESS_KEY
-    }
+    command = <<EOF
+    #!/bin/bash
+    existing_keys=$(aws iam list-access-keys --user-name ${var.test_user_name} --query 'AccessKeyMetadata[*].AccessKeyId' --output text)
+    for key in $existing_keys; do
+      aws iam delete-access-key --user-name ${var.test_user_name} --access-key-id $key
+    done
+    EOF
+    interpreter = ["bash", "-c"]
   }
 }
 
