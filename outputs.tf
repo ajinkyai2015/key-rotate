@@ -8,6 +8,16 @@
 #   value       = module.iam.iam_policy_arn
 # }
 
+output "readonly_user_access_key_id" {
+  description = "The access key ID of the read-only user"
+  value       = module.iam.readonly_user_access_key_id
+}
+
+output "readonly_user_secret_arn" {
+  description = "The ARN of the Secrets Manager secret"
+  value       = module.iam.readonly_user_secret_arn
+}
+
 output "lambda_function_arn" {
   description = "ARN of the Lambda function created"
   value       = module.lambda.lambda_function_arn

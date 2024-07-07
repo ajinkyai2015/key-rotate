@@ -49,3 +49,18 @@ variable "instance_name" {
   description = "The name tag for the instance"
   type        = string
 }
+
+variable "readonly_role_name" {
+  description = "The name of the read-only role"
+  type        = string
+}
+
+variable "readonly_user_name" {
+  description = "The name of the read-only user"
+  type        = string
+}
+
+variable "secrets_manager_secret_name" {
+  description = "The name of the Secrets Manager secret"
+  type        = string
+}
