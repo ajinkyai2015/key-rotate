@@ -10,6 +10,11 @@ variable "readonly_user_name" {
   default     = "readonly-user"
 }
 
+variable "test_user_name" {
+  description = "The name of the test user"
+  type        = string
+}
+
 variable "secrets_manager_secret_name" {
   description = "The name of the Secrets Manager secret"
   type        = string
