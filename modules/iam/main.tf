@@ -78,10 +78,6 @@ resource "aws_iam_access_key" "readonly_user_key" {
 }
 
 resource "aws_iam_user" "test_user" {
-  name = "test-user"
-}
-
-resource "aws_iam_user" "test_user" {
   name = var.test_user_name
 }
 
