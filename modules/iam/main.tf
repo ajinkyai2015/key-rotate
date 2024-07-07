@@ -52,7 +52,6 @@ resource "aws_iam_policy" "lambda_iam_policy" {
   })
 }
 
-
 resource "aws_iam_role_policy_attachment" "lambda_iam_policy_attachment" {
   role       = aws_iam_role.lambda_iam_role.name
   policy_arn = aws_iam_policy.lambda_iam_policy.arn
@@ -73,6 +72,7 @@ resource "null_resource" "delete_existing_readonly_keys" {
     EOF
     interpreter = ["bash", "-c"]
   }
+  depends_on = [aws_iam_user.readonly_user]
 }
 
 resource "aws_iam_access_key" "readonly_user_key" {
@@ -95,6 +95,7 @@ resource "null_resource" "delete_existing_test_keys" {
     EOF
     interpreter = ["bash", "-c"]
   }
+  depends_on = [aws_iam_user.test_user]
 }
 
 resource "aws_iam_access_key" "test_user_key" {
@@ -104,10 +105,6 @@ resource "aws_iam_access_key" "test_user_key" {
 
 resource "aws_secretsmanager_secret" "readonly_user_secret" {
   name = var.secrets_manager_secret_name
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
 }
 
 resource "aws_secretsmanager_secret_version" "readonly_user_secret_version" {
@@ -116,8 +113,4 @@ resource "aws_secretsmanager_secret_version" "readonly_user_secret_version" {
     AccessKeyId     = aws_iam_access_key.readonly_user_key.id
     SecretAccessKey = aws_iam_access_key.readonly_user_key.secret
   })
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
 }
