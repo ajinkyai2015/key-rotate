@@ -1,6 +1,15 @@
 provider "aws" {
   region = var.region
 }
+terraform {
+  backend "s3" {
+    bucket         = "kr-statefile"
+    key            = "kr-statefile/backend-sf/terraform.tfstate"
+    region         = "us-west-2"
+    #dynamodb_table = "your-dynamodb-table"  # Optional, for state locking
+    encrypt        = true
+  }
+}
 
 module "iam" {
   source = "./modules/iam"
