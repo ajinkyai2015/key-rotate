@@ -1,5 +1,14 @@
+terraform {
+  required_providers {
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 2.2.0"
+    }
+  }
+}
+
 provider "aws" {
-  region = var.region
+  region = "us-west-2"
 }
 
 terraform {

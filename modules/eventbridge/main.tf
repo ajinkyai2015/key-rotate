@@ -1,3 +1,7 @@
+resource "random_id" "lambda_permission_id" {
+  byte_length = 8
+}
+
 resource "aws_cloudwatch_event_rule" "schedule_rule" {
   name                 = "schedule_rule"
   schedule_expression  = "cron(0 12 * * ? *)"
