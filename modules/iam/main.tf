@@ -97,9 +97,9 @@ resource "aws_iam_access_key" "test_user_key" {
 resource "aws_secretsmanager_secret" "readonly_user_secret" {
   name = var.secrets_manager_secret_name
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 resource "aws_secretsmanager_secret_version" "readonly_user_secret_version" {
