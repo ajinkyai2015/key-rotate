@@ -12,13 +12,13 @@ module "sns" {
 }
 
 module "lambda" {
-  source                 = "./modules/lambda"
-  sns_topic_arn          = module.sns.sns_topic_arn
-  lambda_role_arn        = module.iam.lambda_role_arn
-  env1_create_key        = var.env1_create_key
-  env2_disable_key       = var.env2_disable_key
-  env3_delete_key        = var.env3_delete_key
-  last_used_threshold    = var.last_used_threshold
+  source = "./modules/lambda"
+  sns_topic_arn       = module.sns.sns_topic_arn
+  lambda_role_arn     = module.iam.lambda_iam_role_arn
+  env1_create_key     = var.env1_create_key
+  env2_disable_key    = var.env2_disable_key
+  env3_delete_key     = var.env3_delete_key
+  last_used_threshold = var.last_used_threshold
 }
 
 module "eventbridge" {

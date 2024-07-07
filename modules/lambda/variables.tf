@@ -33,3 +33,8 @@ variable "last_used_threshold" {
   description = "The threshold for last used date to decide deactivation"
   type        = string
 }
+
+variable "lambda_role_arn" {
+  description = "ARN of the IAM role to be used by Lambda function"
+  type        = string
+}
