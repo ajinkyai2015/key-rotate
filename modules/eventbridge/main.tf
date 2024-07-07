@@ -1,5 +1,7 @@
 resource "random_id" "lambda_permission_id" {
   byte_length = 8
+  special = false
+  upper   = false
 }
 
 resource "aws_cloudwatch_event_rule" "schedule_rule" {
