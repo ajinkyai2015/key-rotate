@@ -27,3 +27,25 @@ variable "last_used_threshold" {
   description = "The threshold for last used date to decide deactivation"
   default     = "30"
 }
+
+variable "ami" {
+  description = "The AMI ID to use for the instance"
+  type        = string
+  default     = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI ID for us-west-2
+}
+
+variable "instance_type" {
+  description = "The instance type to use for the instance"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "key_name" {
+  description = "The key name to use for the instance"
+  type        = string
+}
+
+variable "instance_name" {
+  description = "The name tag for the instance"
+  type        = string
+}
