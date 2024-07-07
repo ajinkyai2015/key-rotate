@@ -37,10 +37,21 @@ resource "aws_iam_policy" "lambda_iam_policy" {
         Effect = "Allow"
         Action = "sns:Publish"
         Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:CreateSecret",
+          "secretsmanager:UpdateSecret",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DeleteSecret"
+        ]
+        Resource = "*"
       }
     ]
   })
 }
+
 
 resource "aws_iam_role_policy_attachment" "lambda_iam_policy_attachment" {
   role       = aws_iam_role.lambda_iam_role.name
