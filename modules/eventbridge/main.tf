@@ -16,7 +16,7 @@ resource "aws_cloudwatch_event_target" "lambda_target" {
 }
 
 resource "aws_lambda_permission" "allow_eventbridge" {
-  statement_id  = "AllowExecutionFromEventBridge-${timestamp()}"
+  statement_id  = "AllowExecutionFromEventBridge-${random_string.lambda_permission_id.result}"
   action        = "lambda:InvokeFunction"
   function_name = var.lambda_function_arn
   principal     = "events.amazonaws.com"
