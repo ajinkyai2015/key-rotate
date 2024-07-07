@@ -13,26 +13,26 @@ resource "aws_iam_role" "lambda_iam_role" {
 }
 
 resource "aws_iam_policy" "lambda_iam_policy" {
-  name = "lambda_iam_policy"
+  name   = "lambda_iam_policy_${terraform.workspace}"
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
         Action = [
           "iam:ListAccessKeys",
           "iam:CreateAccessKey",
           "iam:UpdateAccessKey",
-          "iam:DeleteAccessKey"
-        ]
-        Effect = "Allow"
-        Resource = "*"
+          "iam:DeleteAccessKey",
+        ],
+        Effect   = "Allow",
+        Resource = "*",
       },
       {
-        Action = "sns:Publish"
-        Effect = "Allow"
-        Resource = "*"
-      }
-    ]
+        Action   = "sns:Publish",
+        Effect   = "Allow",
+        Resource = "*",
+      },
+    ],
   })
 }
 
