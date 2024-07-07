@@ -59,7 +59,7 @@ def lambda_handler(event, context):
             "body": "Failed to list IAM users"
         }
 
-    # For each IAM user, check if any access keys are older than the specified time
+    # For each IAM user, rotate keys immediately for testing
     for user in response['Users']:
         user_name = user['UserName']
         try:
@@ -71,36 +71,38 @@ def lambda_handler(event, context):
         for access_key in access_keys:
             key_id = access_key['AccessKeyId']
             status = access_key['Status']
-            create_date = access_key['CreateDate']
-            age = (datetime.now(timezone.utc) - create_date).days
-            last_used_response = iam.get_access_key_last_used(AccessKeyId=key_id)
-            last_used = last_used_response['AccessKeyLastUsed'].get('LastUsedDate', datetime.now(timezone.utc))
+            #create_date = access_key['CreateDate']
+            #age = (datetime.now(timezone.utc) - create_date).days
+            #last_used_response = iam.get_access_key_last_used(AccessKeyId=key_id)
+            #last_used = last_used_response['AccessKeyLastUsed'].get('LastUsedDate', datetime.now(timezone.utc))
 
             try:
-                if age == int(os.environ['env1_create_key']):
-                    new_key_id, new_secret = create_new_key(iam, user_name)
+                # Create new key
+                new_key_id, new_secret = create_new_key(iam, user_name)
+                sns.publish(
+                    TopicArn=topic_arn,
+                    Message=f"A new access key has been created for user {user_name}: New Access Key Id={new_key_id} Please update the application and tool with a new access key. The old key will be inactive soon.",
+                    Subject="New Access Key Created"
+                )
+
+                # Deactivate old key immediately for testing
+                if status == 'Active':
+                    deactivate_key(iam, user_name, key_id)
                     sns.publish(
                         TopicArn=topic_arn,
-                        Message=f"A new access key has been created for user {user_name}: New Access Key Id={new_key_id} Please update the application and tool with a new access key. The old key will be inactive soon.",
-                        Subject="New Access Key Created"
+                        Message=f"The access key {key_id} has been deactivated for user {user_name}.",
+                        Subject="Access Key Inactive"
                     )
 
-                if age >= int(os.environ['env2_disable_key']) and status == 'Active':
-                    if (datetime.now(timezone.utc) - last_used).days >= int(os.environ['last_used_threshold']):
-                        deactivate_key(iam, user_name, key_id)
-                        sns.publish(
-                            TopicArn=topic_arn,
-                            Message=f"The access key {key_id} has been deactivated for user {user_name}.",
-                            Subject="Access Key Inactive"
-                        )
-
-                if age >= int(os.environ['env3_delete_key']) and status == 'Inactive':
+                # Delete old key immediately for testing
+                if status == 'Inactive':
                     delete_key(iam, user_name, key_id)
                     sns.publish(
                         TopicArn=topic_arn,
                         Message=f"The access key {key_id} has been deleted for user {user_name}.",
                         Subject="Access Key Deleted"
                     )
+
             except ClientError as e:
                 print(f"Failed to rotate access key for user {user_name}: {e}")
                 continue
@@ -109,4 +111,3 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": "Key Rotation is Successfully Completed!!"
     }
-
