@@ -23,6 +23,12 @@ terraform {
 
 module "iam" {
   source = "./modules/iam"
+  readonly_user_name           = var.readonly_user_name
+  test_user_name               = var.test_user_name
+  readonly_role_name           = var.readonly_role_name
+  secrets_manager_secret_name  = var.secrets_manager_secret_name
+  AWS_ACCESS_KEY_ID            = var.AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY        = var.AWS_SECRET_ACCESS_KEY
 }
 
 module "sns" {
