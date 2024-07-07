@@ -62,9 +62,7 @@ resource "aws_iam_user" "readonly_user" {
   name = var.readonly_user_name
 }
 
-resource "aws_iam_access_key" "readonly_user_key" {
-  user = aws_iam_user.readonly_user.name
-
+resource "null_resource" "delete_existing_readonly_keys" {
   provisioner "local-exec" {
     command = <<EOF
     #!/bin/bash
@@ -77,13 +75,16 @@ resource "aws_iam_access_key" "readonly_user_key" {
   }
 }
 
+resource "aws_iam_access_key" "readonly_user_key" {
+  user = aws_iam_user.readonly_user.name
+  depends_on = [null_resource.delete_existing_readonly_keys]
+}
+
 resource "aws_iam_user" "test_user" {
   name = var.test_user_name
 }
 
-resource "aws_iam_access_key" "test_user_key" {
-  user = aws_iam_user.test_user.name
-
+resource "null_resource" "delete_existing_test_keys" {
   provisioner "local-exec" {
     command = <<EOF
     #!/bin/bash
@@ -94,6 +95,11 @@ resource "aws_iam_access_key" "test_user_key" {
     EOF
     interpreter = ["bash", "-c"]
   }
+}
+
+resource "aws_iam_access_key" "test_user_key" {
+  user = aws_iam_user.test_user.name
+  depends_on = [null_resource.delete_existing_test_keys]
 }
 
 resource "aws_secretsmanager_secret" "readonly_user_secret" {
